@@ -1,0 +1,88 @@
+{
+    "Users": [
+        {
+            "email": "JohnDoe@emaple.com",
+            "password": "ThisIsJohnDoe12"
+        },
+        {
+            "email": "MaryDoe@example.com",
+            "password": "ThisIsMaryDoe12"
+        }
+    ],
+    "Products": [
+        {
+            "name": "book",
+            "price": 12.5,
+            "quantity": 37,
+            "origin": "domestic",
+            "category": "Books"
+        },
+        {
+            "name": "music CD",
+            "price": 14.0,
+            "quantity": 62,
+            "origin": "domestic",
+            "category": "Entertainment"
+        },
+        {
+            "name": "chocolate bar",
+            "price": 0.85,
+            "quantity": 88,
+            "origin": "domestic",
+            "category": "Food"
+        },
+        {
+            "name": "imported box of chocolates",
+            "price": 10.0,
+            "quantity": 24,
+            "origin": "imported",
+            "category": "Food"
+        },
+        {
+            "name": "imported bottle of perfume",
+            "price": 47.5,
+            "quantity": 52,
+            "origin": "imported",
+            "category": "Personal care"
+        },
+        {
+            "name": "bottle of perfume",
+            "price": 20.0,
+            "quantity": 78,
+            "origin": "domestic",
+            "category": "Personal care"
+        },
+        {
+            "name": "packet of headache pills",
+            "price": 9.75,
+            "quantity": 17,
+            "origin": "domestic",
+            "category": "Medical products"
+        },
+        {
+            "name": "imported box of chocolates",
+            "price": 11.25,
+            "quantity": 95,
+            "origin": "imported",
+            "category": "Food"
+        }
+    ],
+    "Orders": [
+        {
+            "UserId": 1,
+            "ProductId": 1
+        },
+        {
+            "UserId": 1,
+            "ProductId": 5
+        },
+        {
+            "UserId": 2,
+            "ProductId": 4
+        },
+        {
+            "UserId": 2,
+            "ProductId": 2
+        }
+    ]
+}
