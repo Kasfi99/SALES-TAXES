@@ -1,131 +1,139 @@
-var easyinvoice = require("easyinvoice");
-var fs = require("fs");
-var path = require("path");
+function calculateOrderTax(product) {
+  const products = product;
+  const basicSalesTaxRate = 10;
+  const importDutyRate = 5;
+  let totalSalesTax = 0;
+  let totalPrice = 0;
+  const productSales = [];
+  function roundToNearest0_05(value) {
+    return Math.ceil(value * 20) / 20;
+  }
+  for (const product of products) {
+    const { id, name, price, quantity, origin, category } = product;
+    let isImported = false;
+    if (origin === "imported") {
+      isImported = true;
+    }
+    let isExempt = false;
+    if (
+      category === "Books" ||
+      category === "Food" ||
+      category === "Medical products"
+    ) {
+      isExempt = true;
+    }
+    let salesTax = 0;
+    if (!isExempt) {
+      salesTax += (price * basicSalesTaxRate) / 100;
+    }
+    if (isImported) {
+      salesTax += (price * importDutyRate) / 100;
+    }
+    salesTax = roundToNearest0_05(salesTax);
+    const productPriceAfterTax = price + salesTax;
+    const itemTotal = productPriceAfterTax * quantity;
+    totalSalesTax += salesTax * quantity;
+    totalPrice += itemTotal;
+    const productSale = {
+      id,
+      name,
+      price: productPriceAfterTax.toFixed(2),
+      quantity,
+      salesTax: salesTax.toFixed(2),
+      productPriceAfterTax: (productPriceAfterTax * quantity).toFixed(2),
+    };
+    productSales.push(productSale);
+  }
+  const result = {
+    productSales,
+    salesTaxes: totalSalesTax.toFixed(2),
+    totalPrice: totalPrice.toFixed(2),
+  };
+  return result;
+}
 
-var user = {
-  id: 1,
-  email: "Kasfi@mail.com",
-};
-
-var products = [
+// Example usage:
+const input1 = [
   {
-    quantity: 2,
-    description: "Product 1",
-    "tax-rate": 6,
-    price: 33.87,
+    id: 1,
+    name: "book",
+    price: 12.49,
+    quantity: 1,
+    origin: "",
+    category: "Books",
   },
   {
-    quantity: 4.1,
-    description: "Product 2",
-    "tax-rate": 6,
-    price: 12.34,
+    id: 2,
+    name: "music CD",
+    price: 14.99,
+    quantity: 1,
+    origin: "",
+    category: "",
   },
   {
-    quantity: 4.5678,
-    description: "Product 3",
-    "tax-rate": 21,
-    price: 6324.453456,
+    id: 3,
+    name: "chocolate bar",
+    price: 0.85,
+    quantity: 1,
+    origin: "",
+    category: "",
   },
 ];
-
-var data = {
-  // Customize enables you to provide your own templates
-  // Please review the documentation for instructions and examples
-  customize: {
-    //  "template": fs.readFileSync('template.html', 'base64') // Must be base64 encoded html
+const input2 = [
+  {
+    id: 1,
+    name: "imported box of chocolates",
+    price: 10.0,
+    quantity: 1,
+    origin: "imported",
+    category: "",
   },
-  images: {
-    // The logo on top of your invoice
-    logo: "https://png.pngtree.com/png-vector/20190405/ourmid/pngtree-tax-file-document-icon-png-image_913552.jpg",
-    // The invoice background
-    background: "https://public.easyinvoice.cloud/img/watermark-draft.jpg",
+  {
+    id: 2,
+    name: "imported bottle of perfume",
+    price: 47.5,
+    quantity: 1,
+    origin: "imported",
+    category: "",
   },
-  // Your own data
-  sender: {
-    company: "Home Device",
-    address: "Somewhere in Jakarta",
-    zip: "1234 AB",
-    city: "Jakarta",
-    country: "South Jakarta",
-    //"custom1": "custom value 1",
-    //"custom2": "custom value 2",
-    //"custom3": "custom value 3"
+];
+const input3 = [
+  {
+    id: 1,
+    name: "imported bottle of perfume",
+    price: 27.99,
+    quantity: 1,
+    origin: "imported",
+    category: "",
   },
-  // Your recipient
-  client: {
-    company: `${user.email}`,
-    address: "Somewhere",
-    zip: "4567 CD",
-    city: "Depok",
-    country: "Somewhere in Depok",
-    // "custom1": "custom value 1",
-    // "custom2": "custom value 2",
-    // "custom3": "custom value 3"
+  {
+    id: 2,
+    name: "bottle of perfume",
+    price: 18.99,
+    quantity: 1,
+    origin: "",
+    category: "",
   },
-  information: {
-    // Invoice number
-    number: "2021.0001",
-    // Invoice data
-    date: "12-12-2021",
-    // Invoice due date
-    "due-date": "31-12-2021",
+  {
+    id: 3,
+    name: "packet of headache pills",
+    price: 9.75,
+    quantity: 1,
+    origin: "",
+    category: "Medical products",
   },
-  // The products you would like to see on your invoice
-  // Total values are being calculated automatically
-  products: products,
-  // The message you would like to display on the bottom of your invoice
-  "bottom-notice": "Kindly pay your invoice within 3 days.",
-  // Settings to customize your invoice
-  settings: {
-    currency: "USD",
+  {
+    id: 4,
+    name: "box of imported chocolates",
+    price: 11.25,
+    quantity: 1,
+    origin: "imported",
+    category: "",
   },
-  // Translate your invoice to your preferred language
-  translate: {},
-};
-
-// Generate a dynamic file name based on the current date and time
-var currentDate = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
-var currentTime = new Date().getTime(); // Current timestamp
-var fileName = `invoice_${currentDate}_${currentTime}.pdf`; // Example: invoice_2023-07-12_1626114759000.pdf
-var filePath = path.join("./pdf", fileName); // Specify the path and dynamic file name
-
-// Create your invoice! Easy!
-easyinvoice.createInvoice(data, function (result) {
-  // The response will contain a base64 encoded PDF file
-  var pdfData = result.pdf;
-
-  // Convert the base64 PDF data to a Blob object
-  var blob = b64toBlob(pdfData, "application/pdf");
-
-  // Create a temporary download link
-  var link = document.createElement("a");
-  link.href = window.URL.createObjectURL(blob);
-  link.download = fileName;
-
-  // Trigger the download
-  link.click();
-
-  // Cleanup: Revoke the object URL
-  window.URL.revokeObjectURL(link.href);
-});
-
-// Helper function to convert base64 to Blob
-function b64toBlob(b64Data, contentType) {
-  contentType = contentType || "";
-  var sliceSize = 512;
-  var byteCharacters = atob(b64Data);
-  var byteArrays = [];
-
-  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    var slice = byteCharacters.slice(offset, offset + sliceSize);
-    var byteNumbers = new Array(slice.length);
-    for (var i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-    var byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-
-  var blob = new Blob(byteArrays, { type: contentType });
-  return blob;
-}
+];
+const output1 = calculateOrderTax(input1);
+console.log(output1);
+const output2 = calculateOrderTax(input2);
+console.log(output2);
+const output3 = calculateOrderTax(input3);
+console.log(output3);

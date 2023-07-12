@@ -26,10 +26,9 @@ export default {
             <Card />
             <Cart />
         </div>
-        <div style="width: 65%; margin: auto; margin-top: 20px; height: 100vh; overflow: auto;">
+        <div style="width: 65%; margin: auto; margin-top: 20px; overflow: auto;">
             <Table />
         </div>
     </div>
-    {{ JSON.parse(receipt) }}
-    <Footer style="width: 65%; margin: 20%; margin-bottom: 60px;" />
+    <Footer style="width: 65%; margin-left: 450px; margin-bottom: 60px;" />
 </template>

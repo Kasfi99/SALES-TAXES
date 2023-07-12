@@ -12,14 +12,14 @@
     "Products": [
         {
             "name": "book",
-            "price": 12.5,
+            "price": 12.49,
             "quantity": 37,
             "origin": "domestic",
             "category": "Books"
         },
         {
             "name": "music CD",
-            "price": 14.0,
+            "price": 14.99,
             "quantity": 62,
             "origin": "domestic",
             "category": "Entertainment"
@@ -47,7 +47,7 @@
         },
         {
             "name": "bottle of perfume",
-            "price": 20.0,
+            "price": 18.99,
             "quantity": 78,
             "origin": "domestic",
             "category": "Personal care"
@@ -61,7 +61,7 @@
         },
         {
             "name": "imported box of chocolates",
-            "price": 11.25,
+            "price": 11.85,
             "quantity": 95,
             "origin": "imported",
             "category": "Food"

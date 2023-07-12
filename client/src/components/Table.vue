@@ -1,6 +1,7 @@
 <script>
 import { useMainStore } from '../stores/counter';
 import ModalVue from '../components/Modal.vue';
+import FormModal from './FormModal.vue';
 
 export default {
     data() {
@@ -27,13 +28,11 @@ export default {
         },
         isLogged() {
             return useMainStore().isLogged;
-        },
-        getModalStatus() {
-            return useMainStore().showModal;
         }
     },
     components: {
         ModalVue,
+        FormModal
     },
     methods: {
         fetchOrder() {
@@ -104,6 +103,9 @@ export default {
         },
         async calculateMyTaxes(dataInput) {
             await useMainStore().calculateReceipt(dataInput);
+        },
+        async showModal(modal) {
+            await useMainStore().toggleModal(modal)
         }
     },
     created() {
@@ -119,6 +121,7 @@ export default {
 <template>
     <div>
         <ModalVue />
+        <FormModal />
         <div class="table-container">
             <div class="table-content">
                 <label for="table-search" class="sr-only">Search</label>
@@ -126,8 +129,11 @@ export default {
                     <input v-model="search" type="text" id="table-search" class="search-input"
                         placeholder="Search by product name or category" />
                 </div>
-                <button @click="calculateMyTaxes(selectedQuantities)" type="button" class="my-button-top my-button-primary">
+                <button @click="calculateMyTaxes(selectedQuantities)" type="button" class="my-button-primary">
                     Calculate My Tax now!
+                </button>
+                <button @click="showModal('Form')" type="button" class="my-button-primary">
+                    Add New Tax now!
                 </button>
             </div>
             <table class="table">
@@ -169,7 +175,7 @@ export default {
     </div>
 </template>
   
-<style>
+<style scoped>
 .table-container {
     position: relative;
     overflow-x: auto;
@@ -271,11 +277,15 @@ export default {
 }
 
 .my-button-primary {
+    height: 60px;
+    width: 200px;
     background-color: #8b5cf6;
     color: #ffffff;
+    margin-left: 30px;
+    border-radius: 20px;
 }
 
 .my-button-primary:hover {
-    background-color: #7c3aed;
+    background-color: #5305db;
 }
 </style>

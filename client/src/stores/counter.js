@@ -98,8 +98,8 @@ export const useMainStore = defineStore("counter", {
       }
     },
 
-    async toggleModal() {
-      this.showModal = !this.showModal;
+    async toggleModal(modal) {
+      this.showModal = modal;
     },
 
     async fetchData() {
@@ -164,7 +164,7 @@ export const useMainStore = defineStore("counter", {
         });
 
         this.showCalculation = data;
-        this.toggleModal();
+        this.toggleModal("Calculate");
       } catch (error) {
         console.log(error);
       }
@@ -185,7 +185,7 @@ export const useMainStore = defineStore("counter", {
           data: order,
         });
         await this.fetchData();
-        this.toggleModal();
+        this.toggleModal("Close");
 
         if (data.success) {
           const filePath = data.fileName;
@@ -218,6 +218,31 @@ export const useMainStore = defineStore("counter", {
         Swal.fire({
           position: "top-end",
           icon: "success",
+          title: "CalculateTaxes Successfully",
+          text: "Invoices has been sent",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async submitForm(dataInput) {
+      try {
+        const { data } = await axios({
+          method: "POST",
+          url: `${this.baseUrl}/order/make-order`,
+          data: dataInput,
+          headers: {
+            access_token: localStorage.access_token,
+          },
+        });
+
+        await this.fetchData();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
           title: "Add Successfully",
           text: "Payment Confirmed",
           showConfirmButton: false,
@@ -226,6 +251,10 @@ export const useMainStore = defineStore("counter", {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    async clearCart() {
+      this.selectedQuantities = null;
     },
   },
 });

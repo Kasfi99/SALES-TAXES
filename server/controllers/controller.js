@@ -99,13 +99,13 @@ class Controller {
         } else {
           console.log("File downloaded successfully:", filePath);
           // Delete the file after it has been downloaded
-          fs.unlink(filePath, function (err) {
-            if (err) {
-              console.error("Failed to delete file:", err);
-            } else {
-              console.log("File deleted successfully:", filePath);
-            }
-          });
+          // fs.unlink(filePath, function (err) {
+          //   if (err) {
+          //     console.error("Failed to delete file:", err);
+          //   } else {
+          //     console.log("File deleted successfully:", filePath);
+          //   }
+          // });
         }
       });
     } catch (error) {
@@ -117,27 +117,20 @@ class Controller {
   static async calculateOrderTax(req, res, next) {
     try {
       const products = req.body;
-
       const basicSalesTaxRate = 10;
       const importDutyRate = 5;
-
       let totalSalesTax = 0;
       let totalPrice = 0;
-
       const productSales = [];
-
       function roundToNearest0_05(value) {
         return Math.ceil(value * 20) / 20;
       }
-
       for (const product of products) {
         const { id, name, price, quantity, origin, category } = product;
-
         let isImported = false;
         if (origin === "imported") {
           isImported = true;
         }
-
         let isExempt = false;
         if (
           category === "Books" ||
@@ -146,7 +139,6 @@ class Controller {
         ) {
           isExempt = true;
         }
-
         let salesTax = 0;
         if (!isExempt) {
           salesTax += (price * basicSalesTaxRate) / 100;
@@ -155,12 +147,10 @@ class Controller {
           salesTax += (price * importDutyRate) / 100;
         }
         salesTax = roundToNearest0_05(salesTax);
-
         const productPriceAfterTax = price + salesTax;
         const itemTotal = productPriceAfterTax * quantity;
         totalSalesTax += salesTax * quantity;
         totalPrice += itemTotal;
-
         const productSale = {
           id,
           name,
@@ -171,13 +161,11 @@ class Controller {
         };
         productSales.push(productSale);
       }
-
       const result = {
         productSales,
         salesTaxes: totalSalesTax.toFixed(2),
         totalPrice: totalPrice.toFixed(2),
       };
-
       res.status(200).json(result);
     } catch (error) {
       next(error);
@@ -206,10 +194,11 @@ class Controller {
         products,
         req.user.email
       );
-      // for (const product of productSales) {
-      //   await Controller.reduceQuantity(product.quantity, product.id);
-      // }
-      console.log("========berhasil=======");
+
+      for (const product of productSales) {
+        await Controller.reduceQuantity(product.quantity, product.id);
+      }
+
       res.status(200).json({ success: true, fileName });
     } catch (error) {
       console.log(`Error in function confirmMyOrder : `, error);
@@ -305,34 +294,32 @@ class Controller {
           });
         });
 
-        // console.log(`PDF Created Successfully`);
+        // Helper function to convert base64 to Blob -> didn't get used after all
+        // function b64toBlob(b64Data, contentType) {
+        //   console.log(`Converting base64 to Blob....`);
+        //   contentType = contentType || "";
+        //   var sliceSize = 512;
+        //   var byteCharacters = atob(b64Data);
+        //   var byteArrays = [];
 
-        // Helper function to convert base64 to Blob
-        function b64toBlob(b64Data, contentType) {
-          console.log(`Converting base64 to Blob....`);
-          contentType = contentType || "";
-          var sliceSize = 512;
-          var byteCharacters = atob(b64Data);
-          var byteArrays = [];
+        //   for (
+        //     var offset = 0;
+        //     offset < byteCharacters.length;
+        //     offset += sliceSize
+        //   ) {
+        //     var slice = byteCharacters.slice(offset, offset + sliceSize);
+        //     var byteNumbers = new Array(slice.length);
+        //     for (var i = 0; i < slice.length; i++) {
+        //       byteNumbers[i] = slice.charCodeAt(i);
+        //     }
+        //     var byteArray = new Uint8Array(byteNumbers);
+        //     byteArrays.push(byteArray);
+        //   }
 
-          for (
-            var offset = 0;
-            offset < byteCharacters.length;
-            offset += sliceSize
-          ) {
-            var slice = byteCharacters.slice(offset, offset + sliceSize);
-            var byteNumbers = new Array(slice.length);
-            for (var i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i);
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
-          }
-
-          var blob = new Blob(byteArrays, { type: contentType });
-          console.log(`Converting Success!`);
-          return blob;
-        }
+        //   var blob = new Blob(byteArrays, { type: contentType });
+        //   console.log(`Converting Success!`);
+        //   return blob;
+        // }
         // console.log(`PDF Converted, ready to sent....`);
       });
     } catch (error) {
@@ -342,7 +329,7 @@ class Controller {
 
   static async MakeMyOrder(req, res, next) {
     try {
-      const { name, quantity, price } = req.body;
+      const { name, quantity, price, origin, category } = req.body;
 
       const id = req.user.id;
 
@@ -350,6 +337,8 @@ class Controller {
         name,
         quantity,
         price,
+        origin,
+        category,
       });
 
       if (!product) {

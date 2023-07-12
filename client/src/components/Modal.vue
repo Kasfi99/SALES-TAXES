@@ -26,8 +26,7 @@ export default {
     },
     methods: {
         toggleModal() {
-            useMainStore().toggleModal();
-            console.log(this.showModal, '<<< show modal')
+            useMainStore().toggleModal('Close');
         },
         confirmMyOrder(datataxes) {
             useMainStore().confirmMyOrder(datataxes)
@@ -37,9 +36,8 @@ export default {
 </script>
 
 <template>
-    <div v-if="showModal">
-        <div
-            class="fixed z-50 w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center items-center">
+    <div v-if="showModal === 'Calculate'">
+        <div class="main-container">
             <div class="container-top">
                 <div class="content-container">
                     <h3 class="modal-heading">Your Total</h3>
@@ -52,7 +50,7 @@ export default {
                                     <th scope="col" class="table-header">Order Quantity</th>
                                     <th scope="col" class="table-header">Price Per Pieces</th>
                                     <th scope="col" class="table-header">Tax Per Pieces</th>
-                                    <th scope="col" class="table-header">Total Per Product</th>
+                                    <th scope="col" class="table-header">Product Total Price</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,14 +86,28 @@ export default {
 </template>
 
 <style scoped>
-.modal-container {
+.main-container {
+    position: fixed;
+    z-index: 50;
     width: 100%;
-    max-width: 500px;
+    padding: 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    max-height: calc(100% - 1rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 
 .container-top {
     position: relative;
-    width: 1000px;
+    width: 1080px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);

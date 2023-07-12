@@ -9,16 +9,25 @@ export default {
             return useMainStore().selectedQuantities;
         },
     },
+    methods: {
+        clearCart() {
+            useMainStore().clearCart();
+        }
+    }
 };
 </script>
 
 <template>
-    <div style="width: 500px;"
-        class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-        <div class="flex flex-col items-center pb-10 mt-4">
-            <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Your Cart</h5>
-            <span v-if="!cart" class="text-sm text-gray-500 dark:text-gray-400">Add One Product Here!</span>
+    <div class="container">
+        <div class="card-top">
+            <div style="display: flex;">
 
+                <h5 class="text-top">Your Cart</h5>
+                <button @click="clearCart()" type="button" class="my-button-primary">
+                    Clear Cart
+                </button>
+            </div>
+            <span v-if="!cart" class="cart-text">Add One Product Here!</span>
         </div>
         <table v-if="cart" class="table">
             <thead>
@@ -44,24 +53,40 @@ export default {
 </template>
 
 <style scoped>
-.table-container {
-    position: relative;
-    overflow-x: auto;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-radius: 0.375rem;
+.container {
+    width: 390px;
+    background-color: #fff;
+    border-width: 1px;
+    border-color: #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.table-content {
-    padding-bottom: 1rem;
-    background-color: #ffffff;
+.card-top {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 10px;
+    margin-top: 20px;
 }
 
 .table {
-
+    width: 380px;
     font-size: 0.875rem;
     text-align: left;
     color: #6b7280;
+}
+
+.text-top {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #333333;
+}
+
+.cart-text {
+    font-size: 0.875rem;
+    color: #999999;
 }
 
 .table thead {
@@ -89,5 +114,21 @@ export default {
     font-weight: 500;
     color: #1f2937;
     white-space: nowrap;
+}
+
+.my-button-primary {
+    height: 30px;
+    width: 60px;
+    background-color: #f22424;
+    color: #ffffff;
+    margin-left: 30px;
+    border-radius: 5px;
+    font-size: 11px;
+    position: absolute;
+    right: 10px;
+}
+
+.my-button-primary:hover {
+    background-color: #a41b1b;
 }
 </style>

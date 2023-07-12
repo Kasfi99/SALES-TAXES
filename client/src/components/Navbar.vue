@@ -133,20 +133,6 @@ nav {
 
 }
 
-.my-button-primary {
-    background-color: #8b5cf6;
-    color: #ffffff;
-}
-
-.my-button-primary:hover {
-    background-color: #7c3aed;
-}
-
-.my-button-primary:focus {
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
-    outline-color: #b794f4;
-}
-
 .my-button-secondary {
     background-image: linear-gradient(135deg, #8b5cf6, #1d4ed8);
     color: #ffffff;
