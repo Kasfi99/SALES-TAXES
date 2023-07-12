@@ -71,17 +71,14 @@ class Controller {
 
   static async getOrderDetail(req, res, next) {
     try {
-      const { id, UserId } = req.body;
+      const { id } = req.params;
+      console.log(`ini id: `, id);
+      const myOrder = await Order.findByPk(id, {
+        include: Product,
+      });
 
-      if (UserId === req.user.id) {
-        const myOrder = await Order.findByPk({
-          where: { id },
-          include: Product,
-        });
-
-        if (myOrder) {
-          res.status(200).json(myOrder);
-        }
+      if (myOrder) {
+        res.status(200).json(myOrder);
       } else {
         throw { name: `Unauthorized` };
       }
@@ -117,20 +114,34 @@ class Controller {
   static async calculateOrderTax(req, res, next) {
     try {
       const products = req.body;
+
+      //Initiate the value
       const basicSalesTaxRate = 10;
       const importDutyRate = 5;
       let totalSalesTax = 0;
+      let totalPriceAfterTax = 0;
+      let totalQuantity = 0;
       let totalPrice = 0;
       const productSales = [];
+
+      // Function to round up the value
       function roundToNearest0_05(value) {
         return Math.ceil(value * 20) / 20;
       }
+
+      // Check per item
       for (const product of products) {
         const { id, name, price, quantity, origin, category } = product;
+        totalQuantity += quantity;
+        totalPrice += parseFloat(price);
         let isImported = false;
-        if (origin === "imported") {
+
+        //check if it's imported or not
+        if (origin === "imported" || origin === "Imported") {
           isImported = true;
         }
+
+        //check if it is an exempt product or not
         let isExempt = false;
         if (
           category === "Books" ||
@@ -139,6 +150,8 @@ class Controller {
         ) {
           isExempt = true;
         }
+
+        // calculate the tax
         let salesTax = 0;
         if (!isExempt) {
           salesTax += (price * basicSalesTaxRate) / 100;
@@ -146,25 +159,33 @@ class Controller {
         if (isImported) {
           salesTax += (price * importDutyRate) / 100;
         }
+
+        // re-assign value
         salesTax = roundToNearest0_05(salesTax);
-        const productPriceAfterTax = price + salesTax;
+        const productPriceAfterTax = parseFloat(price) + salesTax;
         const itemTotal = productPriceAfterTax * quantity;
         totalSalesTax += salesTax * quantity;
-        totalPrice += itemTotal;
+        totalPriceAfterTax += itemTotal;
+
+        //assign value to object to be sent
         const productSale = {
           id,
           name,
-          price: productPriceAfterTax.toFixed(2),
+          price,
           quantity,
           salesTax: salesTax.toFixed(2),
           productPriceAfterTax: (productPriceAfterTax * quantity).toFixed(2),
         };
         productSales.push(productSale);
       }
+
+      //modify object to be sent
       const result = {
         productSales,
-        salesTaxes: totalSalesTax.toFixed(2),
+        totalQuantity,
         totalPrice: totalPrice.toFixed(2),
+        salesTaxes: totalSalesTax.toFixed(2),
+        totalPriceAfterTax: totalPriceAfterTax.toFixed(2),
       };
       res.status(200).json(result);
     } catch (error) {

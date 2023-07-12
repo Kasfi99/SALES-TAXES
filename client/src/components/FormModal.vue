@@ -43,13 +43,12 @@ export default {
         <div class="main-container">
             <div class="form-container">
                 <form @submit.prevent="submitForm(dataInput)" class="form" action="#">
-                    <h5 class="form-headline">{{ isRegister ? `Sign up to our platform` :
-                        `Sign in to our platform` }}</h5>
+                    <h5 class="form-headline">Add New Product</h5>
                     <div>
                         <label for="name" class="form-label">Your
                             name</label>
                         <input v-model="dataInput.name" type="name" name="name" id="name" class="input-name"
-                            placeholder="name@company.com" required>
+                            placeholder="Imported Box of Chocolate" required>
                     </div>
                     <div>
                         <label for="quantity" class="form-label">Your

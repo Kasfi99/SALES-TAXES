@@ -13,56 +13,63 @@
         {
             "name": "book",
             "price": 12.49,
-            "quantity": 37,
+            "quantity": 10,
             "origin": "domestic",
             "category": "Books"
         },
         {
             "name": "music CD",
             "price": 14.99,
-            "quantity": 62,
+            "quantity": 10,
             "origin": "domestic",
             "category": "Entertainment"
         },
         {
             "name": "chocolate bar",
             "price": 0.85,
-            "quantity": 88,
+            "quantity": 10,
             "origin": "domestic",
             "category": "Food"
         },
         {
             "name": "imported box of chocolates",
-            "price": 10.0,
-            "quantity": 24,
+            "price": 10.50,
+            "quantity": 10,
             "origin": "imported",
             "category": "Food"
         },
         {
             "name": "imported bottle of perfume",
-            "price": 47.5,
-            "quantity": 52,
+            "price": 54.65,
+            "quantity": 10,
+            "origin": "imported",
+            "category": "Personal care"
+        },
+        {
+            "name": "imported bottle of perfume",
+            "price": 32.19,
+            "quantity": 10,
             "origin": "imported",
             "category": "Personal care"
         },
         {
             "name": "bottle of perfume",
-            "price": 18.99,
-            "quantity": 78,
+            "price": 20.89,
+            "quantity": 10,
             "origin": "domestic",
             "category": "Personal care"
         },
         {
             "name": "packet of headache pills",
             "price": 9.75,
-            "quantity": 17,
+            "quantity": 10,
             "origin": "domestic",
             "category": "Medical products"
         },
         {
             "name": "imported box of chocolates",
             "price": 11.85,
-            "quantity": 95,
+            "quantity": 10,
             "origin": "imported",
             "category": "Food"
         }

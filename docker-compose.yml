@@ -1,0 +1,13 @@
+version: "3.6"
+services:
+  app:
+    container_name: "appServer"
+    build: ./server/services
+    ports:
+      - 3000:3000
+  user:
+    container_name: "appClient"
+    build: ./client
+    ports:
+      - 5173:5173
+

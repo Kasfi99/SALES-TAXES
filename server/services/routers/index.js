@@ -13,7 +13,7 @@ router.get("/download", Controller.downloadMyReceipt);
 //handle the order traffic
 router.use(authentication);
 router.get("/order/my-order", Controller.getMyOrder);
-router.get("/order/detail-order", Controller.getOrderDetail);
+router.get("/order/detail-order/:id", Controller.getOrderDetail);
 router.post("/order/calculate-order", Controller.calculateOrderTax);
 router.post("/order/confirm-order", Controller.confirmMyOrder);
 router.post("/order/make-order", Controller.MakeMyOrder);

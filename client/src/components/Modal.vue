@@ -66,13 +66,14 @@ export default {
                                 <tr class="table-row">
                                     <td class="table-cell">Total Amount: </td>
                                     <td class="table-cell"></td>
-                                    <td class="table-cell"></td>
-                                    <td class="table-cell"></td>
-                                    <td class="table-cell">${{ getCalulatedOrders?.salesTaxes }}</td>
+                                    <td class="table-cell">{{ getCalulatedOrders?.totalQuantity }}</td>
                                     <td class="table-cell">${{ getCalulatedOrders?.totalPrice }}</td>
+                                    <td class="table-cell">${{ getCalulatedOrders?.salesTaxes }}</td>
+                                    <td class="table-cell">${{ getCalulatedOrders?.totalPriceAfterTax }}</td>
                                 </tr>
                             </tbody>
                         </table>
+                        <!-- {{ getCalulatedOrders }} -->
                         <div class="button-container">
                             <button @click="toggleModal()" class="button-cancel">Cancel</button>
                             <button type="submit" class="button">Confirm
