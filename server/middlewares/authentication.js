@@ -4,7 +4,6 @@ const { User } = require("../models");
 const authentication = async (req, res, next) => {
   try {
     const { access_token } = req.headers;
-    console.log(access_token, req.headers);
     if (!access_token) {
       throw { name: "Token is Invalid" };
     } else {

@@ -9,6 +9,7 @@ const { authentication } = require("../middlewares/authentication");
 router.post("/user/sign-up", Controller.SignUp);
 router.post("/user/sign-in", Controller.SignIn);
 
+router.get("/download", Controller.downloadMyReceipt);
 //handle the order traffic
 router.use(authentication);
 router.get("/order/my-order", Controller.getMyOrder);
