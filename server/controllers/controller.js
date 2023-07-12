@@ -99,13 +99,13 @@ class Controller {
         } else {
           console.log("File downloaded successfully:", filePath);
           // Delete the file after it has been downloaded
-          // fs.unlink(filePath, function (err) {
-          //   if (err) {
-          //     console.error("Failed to delete file:", err);
-          //   } else {
-          //     console.log("File deleted successfully:", filePath);
-          //   }
-          // });
+          fs.unlink(filePath, function (err) {
+            if (err) {
+              console.error("Failed to delete file:", err);
+            } else {
+              console.log("File deleted successfully:", filePath);
+            }
+          });
         }
       });
     } catch (error) {
